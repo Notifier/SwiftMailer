@@ -28,7 +28,7 @@ If you would like to help take a look at the [list of issues](http://github.com/
 
 Dries De Peuter - <dries@nousefreak.be> - <http://nousefreak.be>
 
-See also the list of [contributors](https://github.com/Notifier/Notifier/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/Notifier/SwiftMailer/contributors) who participated in this project.
 
 ## License
 
