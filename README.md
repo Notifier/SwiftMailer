@@ -1,4 +1,2 @@
-SwiftMailer
-===========
-
-SwiftMailer integration for Notifier
+NotifierSwiftMailerHandler
+==========================
