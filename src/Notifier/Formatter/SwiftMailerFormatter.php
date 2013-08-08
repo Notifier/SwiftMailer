@@ -18,77 +18,76 @@ use Notifier\Message\MessageInterface;
  */
 class SwiftMailerFormatter implements FormatterInterface
 {
-	/**
-	 * @var \Swift_Message
-	 */
-	protected $template;
+    /**
+     * @var \Swift_Message
+     */
+    protected $template;
 
-	/**
-	 * @var callable
-	 */
-	protected $callback;
+    /**
+     * @var callable
+     */
+    protected $callback;
 
-	/**
-	 * @param callable $callback
-	 */
-	public function setCallback(callable $callback)
-	{
-		$this->callback = $callback;
-	}
+    /**
+     * @param callable $callback
+     */
+    public function setCallback(callable $callback)
+    {
+        $this->callback = $callback;
+    }
 
-	/**
-	 * @return callable
-	 */
-	public function getCallback()
-	{
-		return $this->callback;
-	}
+    /**
+     * @return callable
+     */
+    public function getCallback()
+    {
+        return $this->callback;
+    }
 
-	/**
-	 * @param \Swift_Message $template
-	 */
-	public function setTemplate(\Swift_Message $template)
-	{
-		$this->template = $template;
-	}
+    /**
+     * @param \Swift_Message $template
+     */
+    public function setTemplate(\Swift_Message $template)
+    {
+        $this->template = $template;
+    }
 
-	/**
-	 * @return \Swift_Message
-	 */
-	public function getTemplate()
-	{
-		return $this->template;
-	}
+    /**
+     * @return \Swift_Message
+     */
+    public function getTemplate()
+    {
+        return $this->template;
+    }
 
-	public function format(MessageInterface $message)
-	{
-		if (isset($this->template)) {
-			$template = clone $this->template;
-		}
-		elseif (isset($this->callback)) {
-			$template = call_user_func($this->callback, $message);
-		}
+    public function format(MessageInterface $message)
+    {
+        if (isset($this->template)) {
+            $template = clone $this->template;
+        } elseif (isset($this->callback)) {
+            $template = call_user_func($this->callback, $message);
+        }
 
-		if (!isset($template) || !($template instanceof \Swift_Message)) {
-			throw new FormatterException(__CLASS__ . ' could not create a \Swift_Message.');
-		}
+        if (!isset($template) || !($template instanceof \Swift_Message)) {
+            throw new FormatterException(__CLASS__ . ' could not create a \Swift_Message.');
+        }
 
-		$template->setSubject($message->getSubject());
-		$content = str_replace('{{subject}}', $message->getSubject(), $template->getBody());
-		$content = str_replace('{{content}}', $message->getContent(), $content);
-		$template->setBody($content);
+        $template->setSubject($message->getSubject());
+        $content = str_replace('{{subject}}', $message->getSubject(), $template->getBody());
+        $content = str_replace('{{content}}', $message->getContent(), $content);
+        $template->setBody($content);
 
-		$message->setFormatted('swiftmailer', $template);
+        $message->setFormatted('swiftmailer', $template);
 
-		return $message;
-	}
+        return $message;
+    }
 
-	public function formatBatch(array $messages)
-	{
-		foreach ($messages as &$message) {
-			$message = $this->format($message);
-		}
+    public function formatBatch(array $messages)
+    {
+        foreach ($messages as &$message) {
+            $message = $this->format($message);
+        }
 
-		return $messages;
-	}
+        return $messages;
+    }
 }

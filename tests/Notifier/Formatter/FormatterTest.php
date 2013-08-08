@@ -18,12 +18,12 @@ use Notifier\Message\Message;
  */
 class FormatterTest extends \PHPUnit_Framework_TestCase
 {
-	public function testHandler()
+    public function testHandler()
     {
-		$formatter = new SwiftMailerFormatter();
-		$formatter->setTemplate(new \Swift_Message());
-		$message = $formatter->format(new Message('test'));
+        $formatter = new SwiftMailerFormatter();
+        $formatter->setTemplate(new \Swift_Message());
+        $message = $formatter->format(new Message('test'));
 
-		$this->assertInstanceOf('\Swift_Message', $message->getFormatted('swiftmailer'));
-	}
+        $this->assertInstanceOf('\Swift_Message', $message->getFormatted('swiftmailer'));
+    }
 }

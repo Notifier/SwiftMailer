@@ -22,58 +22,58 @@ use Notifier\Message\MessageInterface;
  */
 class SwiftMailerHandler extends AbstractHandler
 {
-	protected $deliveryType = 'swiftmailer';
+    protected $deliveryType = 'swiftmailer';
 
-	protected $mailer;
+    protected $mailer;
 
-	public function __construct(\Swift_Mailer $mailer, $types = Notifier::TYPE_ALL, $bubble = true)
-	{
-		$this->mailer = $mailer;
-		$this->types = $types;
-	}
+    public function __construct(\Swift_Mailer $mailer, $types = Notifier::TYPE_ALL, $bubble = true)
+    {
+        $this->mailer = $mailer;
+        $this->types = $types;
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function sendOne(MessageInterface $message, RecipientInterface $recipient)
-	{
-		$mail = $message->getFormatted('swiftmailer');
-		$mail->setTo($recipient->getInfo('email'));
-		$this->mailer->send($mail);
-	}
+    /**
+     * {@inheritdoc}
+     */
+    protected function sendOne(MessageInterface $message, RecipientInterface $recipient)
+    {
+        $mail = $message->getFormatted('swiftmailer');
+        $mail->setTo($recipient->getInfo('email'));
+        $this->mailer->send($mail);
+    }
 
-	/**
-	 * {@inheritdoc}
-	 */
-	protected function sendBulk(MessageInterface $message, array $recipients)
-	{
-		$emails = array();
-		foreach ($recipients as $recipient) {
-			$emails[$recipient->getInfo('email')] = $recipient->getInfo('email');
-		}
+    /**
+     * {@inheritdoc}
+     */
+    protected function sendBulk(MessageInterface $message, array $recipients)
+    {
+        $emails = array();
+        foreach ($recipients as $recipient) {
+            $emails[$recipient->getInfo('email')] = $recipient->getInfo('email');
+        }
 
-		$mail = $message->getFormatted('swiftmailer');
-		$mail->setTo($emails);
-		$this->mailer->send($mail);
-	}
+        $mail = $message->getFormatted('swiftmailer');
+        $mail->setTo($emails);
+        $this->mailer->send($mail);
+    }
 
-	/**
-	 * Gets the formatter.
-	 *
-	 * @return FormatterInterface
-	 */
-	public function getDefaultFormatter()
-	{
-		return new SwiftMailerFormatter();
-	}
+    /**
+     * Gets the formatter.
+     *
+     * @return FormatterInterface
+     */
+    public function getDefaultFormatter()
+    {
+        return new SwiftMailerFormatter();
+    }
 
-	/**
-	 * Get the formatter. This will use the default as a fallback.
-	 *
-	 * @return SwiftMailerFormatter
-	 */
-	public function getFormatter()
-	{
-		return parent::getFormatter();
-	}
+    /**
+     * Get the formatter. This will use the default as a fallback.
+     *
+     * @return SwiftMailerFormatter
+     */
+    public function getFormatter()
+    {
+        return parent::getFormatter();
+    }
 }

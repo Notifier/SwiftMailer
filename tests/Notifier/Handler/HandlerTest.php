@@ -20,61 +20,60 @@ use Notifier\Recipient\Recipient;
  */
 class HandlerTest extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @var Notifier
-	 */
-	protected $notifier;
+    /**
+     * @var Notifier
+     */
+    protected $notifier;
 
-	/**
-	 * @var \Swift_Plugins_Loggers_ArrayLogger
-	 */
-	protected $logger;
+    /**
+     * @var \Swift_Plugins_Loggers_ArrayLogger
+     */
+    protected $logger;
 
-	public function setUp()
-	{
-		$this->notifier = new Notifier();
-	}
-
-	public function tearDown()
-	{
-		unset($this->notifier);
-	}
-
-	protected function getMailer()
-	{
-		$mailer = \Swift_Mailer::newInstance(new \Swift_NullTransport());
-
-		$this->logger = new \Swift_Plugins_Loggers_ArrayLogger();
-		$mailer->registerPlugin(new SendLogger($this->logger));
-
-
-		return $mailer;
-	}
-
-	public function testHandler()
+    public function setUp()
     {
-		$handler = new SwiftMailerHandler($this->getMailer());
-		$this->assertInstanceOf('Notifier\Handler\SwiftMailerHandler', $handler);
-	}
+        $this->notifier = new Notifier();
+    }
 
-	public function testRecipientFilterSuccess()
-	{
-		$handler = new SwiftMailerHandler($this->getMailer());
-		$handler->getFormatter()->setTemplate(new \Swift_Message());
+    public function tearDown()
+    {
+        unset($this->notifier);
+    }
 
-		$this->notifier->pushHandler($handler);
+    protected function getMailer()
+    {
+        $mailer = \Swift_Mailer::newInstance(new \Swift_NullTransport());
 
-		$recipient = new Recipient('Me');
-		$recipient->setInfo('email', 'name@domail.tld');
-		$recipient->addType('test', 'swiftmailer');
+        $this->logger = new \Swift_Plugins_Loggers_ArrayLogger();
+        $mailer->registerPlugin(new SendLogger($this->logger));
 
-		$message = new Message('test');
-		$message->setContent('content');
-		$message->addRecipient($recipient);
+        return $mailer;
+    }
 
-		$this->notifier->sendMessage($message);
+    public function testHandler()
+    {
+        $handler = new SwiftMailerHandler($this->getMailer());
+        $this->assertInstanceOf('Notifier\Handler\SwiftMailerHandler', $handler);
+    }
 
-		$this->assertContains($recipient->getInfo('email'), $this->logger->dump());
-	}
+    public function testRecipientFilterSuccess()
+    {
+        $handler = new SwiftMailerHandler($this->getMailer());
+        $handler->getFormatter()->setTemplate(new \Swift_Message());
+
+        $this->notifier->pushHandler($handler);
+
+        $recipient = new Recipient('Me');
+        $recipient->setInfo('email', 'name@domail.tld');
+        $recipient->addType('test', 'swiftmailer');
+
+        $message = new Message('test');
+        $message->setContent('content');
+        $message->addRecipient($recipient);
+
+        $this->notifier->sendMessage($message);
+
+        $this->assertContains($recipient->getInfo('email'), $this->logger->dump());
+    }
 
 }
